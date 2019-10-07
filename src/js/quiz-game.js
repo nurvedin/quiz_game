@@ -126,3 +126,11 @@ function addQuestion (question) {
   addQuestionArea(question)
   started_question = new Date()
 }
+
+function addNewQuestion (nexURL) {
+  const question = getQuestion(nexURL)
+  question
+    .then(data =>
+      addQuestion(data)
+    )
+}
