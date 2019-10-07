@@ -134,6 +134,36 @@ function addNewQuestion (nexURL) {
       addQuestion(data)
     )
 }
+
+function checkAnswer (question, val) {
+  const answer = answerQuestion(question.nextURL, val)
+  answer
+    .then(data => {
+      if (data.message === 'Correct answer!') {
+        // cleanUp()
+        question_answererd = true
+        user_info.highscore += 10
+        ended_question = new Date()
+        let rand = {
+          difference: (ended_question.getTime() - started_question.getTime()) / 1000,
+          question: question.question,
+          id: question.id
+        }
+        user_info.score_list = [...user_info.score_list, rand]
+        document.getElementById('Highscore').innerHTML = `Total score: ${user_info.highscore}`
+
+        if (typeof data.nextURL === 'undefined') {
+          endGame()
+        }
+        if (typeof data.nextURL === 'string') {
+          addNewQuestion(data.nextURL)
+        }
+      } else {
+        question_answererd = false
+      }
+    })
+}
+
 function setTimer () {
   downloadTimer = setInterval(function () {
     if (countdown >= 1) {
