@@ -55,13 +55,48 @@ export function showResults () {
 function typeOfQuestion (question) {
   console.log(question)
   if (typeof question.alternatives !== 'undefined') {
-    console.log('radio')
+    radioBtn(question)
   } else {
     addInputType(question)
   }
 }
 
-function addInputType () {
+function radioBtn (question) {
+  const answerArea = document.querySelector('#item-type')
+  const div = document.createElement('div')
+  div.setAttribute('id', 'radio-section')
+
+  Object.keys(question.alternatives).map(function (key) {
+    const label = document.createElement('label')
+    const input = document.createElement('INPUT')
+    input.setAttribute('type', 'radio')
+    input.setAttribute('name', 'radio-btn')
+    input.setAttribute('value', key)
+    label.appendChild(input)
+    label.innerHTML += `${question.alternatives[key]}<br>`
+    div.appendChild(label)
+  })
+
+  answerArea.appendChild(div)
+
+  const radios = document.getElementsByName('radio-btn')
+  const button = document.createElement('button')
+  button.setAttribute('content', 'test content')
+  button.setAttribute('class', 'btn')
+  button.innerHTML = 'check answer'
+  answerArea.appendChild(button)
+
+  for (let i = 0, length = radios.length; i < length; i++) {
+    radios[i].onclick = function (e) {
+      const val = this.value
+      button.addEventListener('click', () => {
+        checkAnswer(question, val)
+      }, false)
+    }
+  }
+}
+
+function addInputType (question) {
   const answerArea = document.querySelector('#answer-input')
   const input = document.createElement('INPUT')
   input.setAttribute('type', 'text')
@@ -73,9 +108,8 @@ function addInputType () {
   answerArea.appendChild(button)
 
   button.addEventListener('click', event => {
-
-  })
-
-
-
+    if (input.value !== '') {
+      checkAnswer(question, input.value)
+    }
+  }, false)
 }
