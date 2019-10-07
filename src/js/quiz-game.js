@@ -134,3 +134,17 @@ function addNewQuestion (nexURL) {
       addQuestion(data)
     )
 }
+function setTimer () {
+  downloadTimer = setInterval(function () {
+    if (countdown >= 1) {
+      countdown--
+    }
+    const timer = document.querySelector('#countdown-timer')
+    timer.innerHTML = `<p>Time left: ${countdown}</p>`
+    if (countdown === 0) {
+      timer.innerHTML = '<p>Your time is up!</p>'
+      // timeIsUp()
+      return false
+    }
+  }, 1000)
+}
