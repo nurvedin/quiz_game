@@ -113,3 +113,16 @@ function addInputType (question) {
     }
   }, false)
 }
+
+function addQuestionArea (question) {
+  typeOfQuestion(question)
+  countdown = 20
+  setTimer(false)
+}
+
+function addQuestion (question) {
+  const questionArea = document.querySelector('#question')
+  questionArea.innerHTML = `<p>${question.question}</p>`
+  addQuestionArea(question)
+  started_question = new Date()
+}
