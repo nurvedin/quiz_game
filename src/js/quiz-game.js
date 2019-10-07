@@ -1,5 +1,17 @@
 import { getQuestion } from './fetch-api.js'
 
+let questionAnswered = true
+let startedQuestion = null
+let endedQuestion = null
+let downloadTimer
+let countdown
+
+const userInfo = {
+  name: null,
+  highscore: null,
+  score_list: []
+}
+
 export function addNickName () {
   const nicknameArea = document.querySelector('#quiz-area')
   nicknameArea.appendChild(document.querySelector('#nickname-area').content.cloneNode(true))
@@ -21,13 +33,6 @@ export function addNickName () {
   })
 }
 
-/*
-export function errorMessage () {
-  const error = document.querySelector('#error')
-  error.appendChild()
-}
-*/
-
 export function startGame (nicknameField, nicknameArea) {
   const child = document.querySelector('#welcome-div')
   const welcomeMessage = document.createElement('h2')
@@ -46,10 +51,6 @@ export function startGame (nicknameField, nicknameArea) {
       }
       )
   }, true)
-}
-
-export function showResults () {
-
 }
 
 function typeOfQuestion (question) {
@@ -124,7 +125,7 @@ function addQuestion (question) {
   const questionArea = document.querySelector('#question')
   questionArea.innerHTML = `<p>${question.question}</p>`
   addQuestionArea(question)
-  started_question = new Date()
+  startedQuestion = new Date()
 }
 
 function addNewQuestion (nexURL) {
@@ -141,16 +142,16 @@ function checkAnswer (question, val) {
     .then(data => {
       if (data.message === 'Correct answer!') {
         // cleanUp()
-        question_answererd = true
-        user_info.highscore += 10
-        ended_question = new Date()
-        let rand = {
-          difference: (ended_question.getTime() - started_question.getTime()) / 1000,
+        questionAnswered = true
+        userInfo.highscore += 10
+        endedQuestion = new Date()
+        const rand = {
+          difference: (endedQuestion.getTime() - startedQuestion.getTime()) / 1000,
           question: question.question,
           id: question.id
         }
-        user_info.score_list = [...user_info.score_list, rand]
-        document.getElementById('Highscore').innerHTML = `Total score: ${user_info.highscore}`
+        userInfo.score_list = [...userInfo.score_list, rand]
+        document.getElementById('Highscore').innerHTML = `Total score: ${userInfo.highscore}`
 
         if (typeof data.nextURL === 'undefined') {
           endGame()
@@ -159,7 +160,7 @@ function checkAnswer (question, val) {
           addNewQuestion(data.nextURL)
         }
       } else {
-        question_answererd = false
+        questionAnswered = false
       }
     })
 }
@@ -177,4 +178,25 @@ function setTimer () {
       return false
     }
   }, 1000)
+}
+
+const answerQuestion = async (nextUrl, string) => {
+  const url = nextUrl
+  const settings = {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      answer: string
+    })
+  }
+  try {
+    const fetchResponse = await fetch(url, settings)
+    const data = await fetchResponse.json()
+    return data
+  } catch (e) {
+    return e
+  }
 }
