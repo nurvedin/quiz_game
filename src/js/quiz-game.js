@@ -1,18 +1,15 @@
-// import { getQuestion } from './fetch-api.js'
-// import fetch from './cross-fetch'
-
-let questionAnswered = true
-let startedQuestion = null
-let endedQuestion = null
 let downloadTimer
 let countdown
-
+let totalTime
+let timeInput = 0
+let timeRadio = 0
+// object to hold user info
 const userInfo = {
+  uuid: Math.random().toString(36).substr(2, 5),
   name: null,
-  highscore: null,
-  score_list: []
+  highscore: null
 }
-
+// function for adding nick name, input field and a button
 export function addNickName () {
   const nicknameArea = document.querySelector('#quiz-area')
   nicknameArea.appendChild(document.querySelector('#nickname-area').content.cloneNode(true))
@@ -21,62 +18,52 @@ export function addNickName () {
   const error = document.createElement('h2')
   const h2 = document.createTextNode('Error! Please enter a nickname')
   error.appendChild(h2)
-  const element = document.querySelector('#quiz-area')
   const child = document.querySelector('#nickname-div')
+
   button.addEventListener('click', event => {
     if (nicknameField.value.length === 0) {
-      element.insertBefore(error, child)
+      nicknameArea.insertBefore(error, child)
     } else {
       error.remove()
       button.parentElement.innerHTML = ''
-      startGame(nicknameField, nicknameArea)
+      const child = document.querySelector('#welcome')
+      const welcomeMessage = document.createElement('h2')
+      const h2 = document.createTextNode(`Welcome ${nicknameField.value}, Lets play!`)
+      welcomeMessage.appendChild(h2)
+      nicknameArea.insertBefore(welcomeMessage, child)
+
+      userInfo.name = nicknameField.value
+
+      const quizArea = document.querySelector('#quiz-area')
+      quizArea.appendChild(document.querySelector('#welcome').content.cloneNode(true))
+      const playButton = document.querySelector('#play-button')
+      playButton.addEventListener('click', event => {
+        welcomeMessage.remove()
+        playButton.remove()
+        quizArea.appendChild(document.querySelector('#question-area').content.cloneNode(true))
+        const question = getQuestion('http://vhost3.lnu.se:20080/question/1')
+        question
+          .then(data => {
+            addQuestion(data)
+          }
+          )
+      }, true)
     }
   })
 }
 
-export function startGame (nicknameField, nicknameArea) {
-  const child = document.querySelector('#welcome-div')
-  const welcomeMessage = document.createElement('h2')
-  const h2 = document.createTextNode(`Welcome ${nicknameField.value}, Lets play!`)
-  welcomeMessage.appendChild(h2)
-  nicknameArea.insertBefore(welcomeMessage, child)
-  const quizArea = document.querySelector('#quiz-area')
-  quizArea.appendChild(document.querySelector('#welcome').content.cloneNode(true))
-  const button = document.querySelector('#play-button')
-  // const url = 'http://vhost3.lnu.se:20080/question/1'
-  button.addEventListener('click', event => {
-    welcomeMessage.remove()
-    button.remove()
-    quizArea.appendChild(document.querySelector('#question-area').content.cloneNode(true))
-    const question = getQuestion('http://vhost3.lnu.se:20080/question/1')
-    question
-      .then(data => {
-        addQuestion(data)
-      }
-      )
-  }, true)
-}
-
 function addQuestion (question, nicknameArea) {
+  setTimeout(true)
   const questionArea = document.querySelector('#question')
-  // questionArea.appendChild(document.querySelector('#answer-input').content.cloneNode(true))
-  // const addQ = document.createElement('h2')
-  questionArea.innerText = `${question.question}`
-  // questionArea.appendChild(document.querySelector('#question-area').content.cloneNode(true))
-  // const addQ = `<p>${question.question}</p>`
-  // addQ.appendChild(p)
-  // const quizArea = document.querySelector('#quiz-area')
-  // questionArea.innerText = `<p>${question.question}</p>`
-  // questionArea.appendChild(addQ)
-  // questionArea.innerText = question.question
+  const addQ = document.createElement('p')
+  addQ.innerText = question.question
+  questionArea.appendChild(addQ)
   addQuestionArea(question)
-  startedQuestion = new Date()
 }
 
 function addQuestionArea (question) {
   typeOfQuestion(question)
   countdown = 20
-  setTimer(false)
 }
 
 function checkAnswer (question, val) {
@@ -84,32 +71,26 @@ function checkAnswer (question, val) {
   answer
     .then(data => {
       if (data.message === 'Correct answer!') {
-        // cleanUp()
-        questionAnswered = true
-        // userInfo.highscore += 10
-        endedQuestion = new Date()
-        const rand = {
-          difference: (endedQuestion.getTime() - startedQuestion.getTime()) / 1000,
-          question: question.question,
-          id: question.id
-        }
-        // userInfo.score_list = [...userInfo.score_list, rand]
-        // document.getElementById('Highscore').innerHTML = `Total score: ${userInfo.highscore}`
-
+        cleanUp()
         if (typeof data.nextURL === 'undefined') {
-          // endGame()
+          endGame()
         }
         if (typeof data.nextURL === 'string') {
           addNewQuestion(data.nextURL)
         }
       } else {
-        questionAnswered = false
+        gameOver()
       }
     })
 }
 
+function gameOver () {
+  const gameOver = document.querySelector('#quiz-area')
+  gameOver.innerText = 'Game Over!'
+}
+
 const getQuestion = async (url) => {
-  const response = await fetch(url)
+  const response = await window.fetch(url)
   const data = await response.json()
   return data
 }
@@ -122,17 +103,22 @@ function addNewQuestion (nexURL) {
     )
 }
 
-function setTimer () {
-  downloadTimer = setInterval(function () {
+function cleanUp () {
+  countdown = 20
+  const questionAreaParagraph = document.querySelector('#question')
+  questionAreaParagraph.innerHTML = ''
+}
+
+function setTimeout () {
+  downloadTimer = setInterval(() => {
     if (countdown >= 1) {
       countdown--
     }
     const timer = document.querySelector('#countdown-timer')
-    timer.innerHTML = `<p>Time left: ${countdown}</p>`
+    timer.innerText = `Time left: ${countdown}`
     if (countdown === 0) {
-      timer.innerHTML = '<p>Your time is up!</p>'
-      // timeIsUp()
-      return false
+      gameOver()
+      clearInterval(downloadTimer)
     }
   }, 1000)
 }
@@ -162,30 +148,29 @@ function radioBtn (question) {
   })
 
   answerArea.appendChild(div)
-
   const radios = document.getElementsByName('radio-btn')
   const button = document.createElement('button')
   button.setAttribute('content', 'test content')
-  button.setAttribute('class', 'btn')
-  button.innerHTML = 'check answer'
+  button.setAttribute('id', 'btn')
+  button.innerText = 'Check answer'
   answerArea.appendChild(button)
 
   for (let i = 0, length = radios.length; i < length; i++) {
     radios[i].onclick = function (e) {
       const val = this.value
       button.addEventListener('click', () => {
+        clearInterval(downloadTimer)
         checkAnswer(question, val)
-      }, false)
+        timeRadio += (20 - countdown)
+        button.remove()
+        div.remove()
+      }, true)
     }
   }
 }
 
 function addInputType (question) {
   const answerArea = document.querySelector('#quiz-area')
-  answerArea.appendChild(document.querySelector('#question-area').content.cloneNode(true))
-  // const addQ = `<p>${question.question}</p>`
-  console.log(answerArea)
-  // answerArea.appendChild(addQ)
   const input = document.createElement('INPUT')
   const breakLine = document.createElement('br')
   input.setAttribute('type', 'text')
@@ -194,14 +179,17 @@ function addInputType (question) {
   answerArea.appendChild(breakLine)
   const button = document.createElement('BUTTON')
   button.setAttribute('id', 'btn')
-  button.innerHTML = 'Check answer'
+  button.innerText = 'Check answer'
   answerArea.appendChild(button)
-  console.log(button)
   button.addEventListener('click', event => {
     if (input.value !== '') {
+      clearInterval(downloadTimer)
       checkAnswer(question, input.value)
+      timeInput += (20 - countdown)
+      button.remove()
+      input.remove()
     }
-  }, false)
+  }, true)
 }
 
 const answerQuestion = async (nextUrl, string) => {
@@ -217,10 +205,49 @@ const answerQuestion = async (nextUrl, string) => {
     })
   }
   try {
-    const fetchResponse = await fetch(url, settings)
+    const fetchResponse = await window.fetch(url, settings)
     const data = await fetchResponse.json()
     return data
   } catch (e) {
     return e
   }
+}
+
+function endGame () {
+  const divArea = document.querySelector('#quiz-area')
+  const userInfoItem = localStorage.getItem('user info')
+
+  totalTime = timeInput + timeRadio
+  userInfo.highscore = totalTime
+  let itemArr = []
+  if (userInfoItem) {
+    itemArr = JSON.parse(userInfoItem)
+  }
+
+  itemArr.push(userInfo)
+  localStorage.setItem('user info', JSON.stringify(itemArr))
+
+  itemArr.find(x => {
+    if (x.uuid === userInfo.uuid) {
+      x.highscore = totalTime
+    }
+  })
+
+  localStorage.setItem('user info', JSON.stringify(itemArr))
+  const questionArea = document.querySelector('#highscore')
+  const highscore = document.createElement('p')
+  highscore.innerText = `${userInfo.name} : ${userInfo.highscore}`
+  questionArea.appendChild(highscore)
+
+  const returnFastestScore = itemArr.sort((a, b) => parseFloat(a.highscore) - parseFloat(b.highscore))
+  returnFastestScore
+    .filter((i, index) => (index < 5))
+    .map((user, index) => {
+      const scoreNode = document.createElement('p')
+      scoreNode.innerHTML =
+        `<strong>Name: </strong>${user.name}<br>
+        <strong>Highscore: </strong>${user.highscore} sec`
+
+      divArea.appendChild(scoreNode)
+    })
 }

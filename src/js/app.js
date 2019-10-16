@@ -1,4 +1,4 @@
-import { addNickName, startGame } from './quiz-game.js'
+import { addNickName } from './quiz-game.js'
 
 addNickName()
-startGame()
+// startGame()
