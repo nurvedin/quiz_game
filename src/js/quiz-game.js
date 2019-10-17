@@ -115,7 +115,7 @@ function setTimeout () {
       countdown--
     }
     const timer = document.querySelector('#countdown-timer')
-    timer.innerText = `Time left: ${countdown}`
+    timer.innerText = `Time left: ${countdown} sec`
     if (countdown === 0) {
       gameOver()
       clearInterval(downloadTimer)
@@ -236,7 +236,7 @@ function endGame () {
   localStorage.setItem('user info', JSON.stringify(itemArr))
   const questionArea = document.querySelector('#highscore')
   const highscore = document.createElement('p')
-  highscore.innerText = `${userInfo.name} : ${userInfo.highscore}`
+  highscore.innerText = `${userInfo.name} : ${userInfo.highscore} sec`
   questionArea.appendChild(highscore)
 
   const returnFastestScore = itemArr.sort((a, b) => parseFloat(a.highscore) - parseFloat(b.highscore))

@@ -1,0 +1,122 @@
+body {
+  margin: 0;
+  width: 100%;
+  height: 100vh;
+  font-family: "Exo", sans-serif;
+  color: rgb(46, 133, 184);
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  text-align: center;
+}
+
+#container {
+  font-family: 'Merienda';font-size: 22px;
+}
+
+#quiz-area > h1 {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-size: 40;
+  letter-spacing: 0px;
+  word-spacing: 0px;
+  color: rgb(46, 133, 184);
+  font-weight: 700;
+  text-decoration: none;
+  font-style: italic;
+  font-variant: small-caps;
+  text-transform: lowercase;
+}
+
+#nickname-div > label {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-size: 21px;
+  letter-spacing: 0px;
+  word-spacing: 0px;
+  color: rgb(46, 133, 184);
+  font-weight: 700;
+  text-decoration: none;
+  font-style: italic;
+  font-variant: small-caps;
+  text-transform: lowercase;
+
+}
+
+#input-nick {
+  position:relative;
+	font-size: 1.5em;
+	background: linear-gradient(21deg, #10abff, #1beabd);
+	padding: 3px;
+	display: inline-block;
+  border-radius: 9999em;
+  position: center;
+  border-radius: 10px;
+}
+
+#welcome > h2 {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-size: 40;
+  letter-spacing: 0px;
+  word-spacing: 0px;
+  color: rgb(46, 133, 184);
+  font-weight: 700;
+  text-decoration: none;
+  font-style: italic;
+  font-variant: small-caps;
+  text-transform: lowercase;
+}
+
+#input {
+  position:relative;
+	font-size: 1.5em;
+	background: linear-gradient(21deg, #10abff, #1beabd);
+	padding: 3px;
+	display: inline-block;
+  border-radius: 9999em;
+  position: center;
+  border-radius: 10px;
+}
+
+#nickname-button {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  color: #fff;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: #357f96;
+  padding: 5px;
+  border-radius: 5px;
+  display: inline-block;
+  border: none;
+  transition: all 0.4s ease 0s;
+}
+
+#play-button {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  color: #fff;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: #357f96;
+  padding: 15px;
+  border-radius: 5px;
+  display: inline-block;
+  border: none;
+  transition: all 0.4s ease 0s;
+}
+
+#btn {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  color: #fff;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: #357f96;
+  padding: 5px;
+  border-radius: 5px;
+  display: inline-block;
+  border: none;
+  transition: all 0.4s ease 0s;
+}
+
+#highscore > p {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-size: 40;
+  color: rgb(46, 133, 184);
+}
