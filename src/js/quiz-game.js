@@ -3,6 +3,7 @@ let countdown
 let totalTime
 let timeInput = 0
 let timeRadio = 0
+
 // object to hold user info
 const userInfo = {
   uuid: Math.random().toString(36).substr(2, 5),
@@ -10,6 +11,7 @@ const userInfo = {
   highscore: null
 }
 // function for adding nick name, input field and a button
+// Event listener on the play button to get the first question in the API
 export function addNickName () {
   const nicknameArea = document.querySelector('#quiz-area')
   nicknameArea.appendChild(document.querySelector('#nickname-area').content.cloneNode(true))
@@ -52,6 +54,7 @@ export function addNickName () {
   })
 }
 
+// function for adding the questions in 'p' elements
 function addQuestion (question, nicknameArea) {
   setTimeout(true)
   const questionArea = document.querySelector('#question')
@@ -61,11 +64,13 @@ function addQuestion (question, nicknameArea) {
   addQuestionArea(question)
 }
 
+// function to add the question area
 function addQuestionArea (question) {
   typeOfQuestion(question)
   countdown = 20
 }
 
+// checking the answer, either correct, wrong or the time has expired
 function checkAnswer (question, val) {
   const answer = answerQuestion(question.nextURL, val)
   answer
@@ -89,12 +94,14 @@ function gameOver () {
   gameOver.innerText = 'Game Over!'
 }
 
+// get the question function that  uses the fetch API
 const getQuestion = async (url) => {
   const response = await window.fetch(url)
   const data = await response.json()
   return data
 }
 
+// functio to get the next question
 function addNewQuestion (nexURL) {
   const question = getQuestion(nexURL)
   question
@@ -103,12 +110,14 @@ function addNewQuestion (nexURL) {
     )
 }
 
+// little clean up function to clear the question if the question was correctly answered
 function cleanUp () {
   countdown = 20
   const questionAreaParagraph = document.querySelector('#question')
   questionAreaParagraph.innerHTML = ''
 }
 
+// timer function that decrements from 20 seconds
 function setTimeout () {
   downloadTimer = setInterval(() => {
     if (countdown >= 1) {
@@ -131,6 +140,7 @@ function typeOfQuestion (question) {
   }
 }
 
+// creating radio buttons when getting that type of question
 function radioBtn (question) {
   const answerArea = document.querySelector('#item-type')
   const div = document.createElement('div')
@@ -169,6 +179,7 @@ function radioBtn (question) {
   }
 }
 
+// creating input field for that type of question
 function addInputType (question) {
   const answerArea = document.querySelector('#quiz-area')
   const input = document.createElement('INPUT')
@@ -192,6 +203,7 @@ function addInputType (question) {
   }, true)
 }
 
+// arrow function for fetching the answer and the next question
 const answerQuestion = async (nextUrl, string) => {
   const url = nextUrl
   const settings = {
@@ -213,6 +225,8 @@ const answerQuestion = async (nextUrl, string) => {
   }
 }
 
+// function for when all the answers are correctly answered and where i create the localstorage
+// where the top 5 highscores are being calculated and displayed
 function endGame () {
   const divArea = document.querySelector('#quiz-area')
   const userInfoItem = localStorage.getItem('user info')
