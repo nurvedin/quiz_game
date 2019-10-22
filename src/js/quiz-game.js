@@ -4,7 +4,7 @@ let totalTime
 let timeInput = 0
 let timeRadio = 0
 
-// object to hold user info
+// object to hold user info, uuid is a unique random identifier if we use users with the same name
 const userInfo = {
   uuid: Math.random().toString(36).substr(2, 5),
   name: null,
@@ -65,7 +65,7 @@ function addQuestion (question, nicknameArea) {
   countdown = 20
 }
 
-// checking the answer, either correct, wrong or the time has expired
+// checking the answer, either correct, got all the answers right (endgame) or wrong answer
 function checkAnswer (question, val) {
   const answer = answerQuestion(question.nextURL, val)
   answer
@@ -89,14 +89,14 @@ function gameOver () {
   gameOver.innerText = 'Game Over!'
 }
 
-// get the question function that  uses the fetch API
+// get the question, function that uses the fetch API. GET is the default method for fetch API.
 const getQuestion = async (url) => {
   const response = await window.fetch(url)
   const data = await response.json()
   return data
 }
 
-// functio to get the next question
+// function to get the next question
 function addNewQuestion (nexURL) {
   const question = getQuestion(nexURL)
   question
@@ -198,7 +198,7 @@ function addInputType (question) {
   }, true)
 }
 
-// arrow function for fetching the answer and the next question
+// arrow function for posting the answer, or sending with POST to check answer
 const answerQuestion = async (nextUrl, string) => {
   const url = nextUrl
   const settings = {
