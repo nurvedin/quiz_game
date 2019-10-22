@@ -61,11 +61,6 @@ function addQuestion (question, nicknameArea) {
   const addQ = document.createElement('p')
   addQ.innerText = question.question
   questionArea.appendChild(addQ)
-  addQuestionArea(question)
-}
-
-// function to add the question area
-function addQuestionArea (question) {
   typeOfQuestion(question)
   countdown = 20
 }
